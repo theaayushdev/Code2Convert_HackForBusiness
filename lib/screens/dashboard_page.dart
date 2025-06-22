@@ -1,5 +1,36 @@
 import 'package:flutter/material.dart';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 import '../main.dart';
+
+// CSV EXPORT FUNCTION
+Future<void> exportSalesToCsv(BuildContext context, List<SaleRecord> sales) async {
+  final buffer = StringBuffer();
+  buffer.writeln('Product,DateTime,Quantity,Amount,Type');
+  for (var sale in sales) {
+    buffer.writeln(
+      '${sale.productName},${sale.time.toIso8601String()},${sale.quantity},${sale.totalAmount},${sale.type}'
+    );
+  }
+  final csv = buffer.toString();
+
+  try {
+    final directory = await getTemporaryDirectory();
+    final path = '${directory.path}/sales_log.csv';
+    final file = File(path);
+    await file.writeAsString(csv);
+
+    await Share.shareFiles([file.path], text: 'Sales Log CSV');
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('CSV exported!'), backgroundColor: Colors.green),
+    );
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Failed to export CSV: $e'), backgroundColor: Colors.red),
+    );
+  }
+}
 
 class DashboardPage extends StatelessWidget {
   final List<Product> products;
@@ -48,11 +79,25 @@ class DashboardPage extends StatelessWidget {
         title: Text('Admin Dashboard', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
         backgroundColor: Color(0xFF1E88E5),
         elevation: 8,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.download),
+            tooltip: "Export Sales CSV",
+            onPressed: () => exportSalesToCsv(context, sales),
+          ),
+        ],
       ),
       backgroundColor: Color(0xFFF3F8FB),
       body: ListView(
         padding: EdgeInsets.all(16),
         children: [
+          ElevatedButton.icon(
+            icon: Icon(Icons.download),
+            label: Text("Export Sales CSV"),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
+            onPressed: () => exportSalesToCsv(context, sales),
+          ),
+          SizedBox(height: 16),
           Row(
             children: [
               Expanded(child: _dashboardCard(icon: Icons.inventory_2, label: 'Total Products', value: totalProducts.toString(), color: Colors.blueAccent)),
