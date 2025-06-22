@@ -3,7 +3,6 @@ import 'shop.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
-
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
@@ -11,13 +10,32 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   bool isLogin = true;
   bool _obscure = true;
+  bool _obscureConfirm = true;
   final _formKey = GlobalKey<FormState>();
   final _userController = TextEditingController();
   final _passController = TextEditingController();
+  final _nameController = TextEditingController();
+  final _confirmPassController = TextEditingController();
+
+  void _showDialog(String title, String message, {bool success = false}) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+        title: Text(title, style: TextStyle(color: success ? Colors.green : Colors.red)),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("OK"),
+          )
+        ],
+      ),
+    );
+  }
 
   void _onLogin() async {
     if (_formKey.currentState!.validate()) {
-      // Simulate loading and then go to ShopHomePage
       showDialog(
         context: context,
         barrierDismissible: false,
@@ -26,7 +44,7 @@ class _LoginPageState extends State<LoginPage> {
         ),
       );
       await Future.delayed(const Duration(seconds: 1));
-      if (mounted) Navigator.of(context).pop(); // remove dialog
+      if (mounted) Navigator.of(context).pop();
       if (mounted) {
         Navigator.pushReplacement(
           context,
@@ -36,13 +54,29 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  void _onSignIn() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text("Sign In clicked! (Create account not implemented)"),
-        backgroundColor: Colors.blueAccent,
-      ),
-    );
+  void _onSignIn() async {
+    if (_formKey.currentState!.validate()) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (_) => const Center(
+          child: CircularProgressIndicator(color: Color(0xFF57C4DE)),
+        ),
+      );
+      await Future.delayed(const Duration(seconds: 1));
+      if (mounted) Navigator.of(context).pop();
+      if (mounted) {
+        _showDialog("Sign Up Successful", "Welcome, ${_nameController.text}!", success: true);
+        // Optionally, clear fields
+        _userController.clear();
+        _passController.clear();
+        _nameController.clear();
+        _confirmPassController.clear();
+        setState(() {
+          isLogin = true; // Switch back to login after successful sign up
+        });
+      }
+    }
   }
 
   void _onSocial(String name) {
@@ -183,6 +217,29 @@ class _LoginPageState extends State<LoginPage> {
                           key: _formKey,
                           child: Column(
                             children: [
+                              if (!isLogin) ...[
+                                // Name field for sign up
+                                TextFormField(
+                                  controller: _nameController,
+                                  decoration: InputDecoration(
+                                    hintText: "Full Name",
+                                    contentPadding: const EdgeInsets.symmetric(vertical: 18, horizontal: 22),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(28),
+                                      borderSide: BorderSide.none,
+                                    ),
+                                    filled: true,
+                                    fillColor: const Color(0xFFF5FBFC),
+                                  ),
+                                  validator: (v) {
+                                    if (!isLogin && (v == null || v.trim().length < 2)) {
+                                      return "Enter your name";
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                const SizedBox(height: 16),
+                              ],
                               // Username
                               TextFormField(
                                 controller: _userController,
@@ -217,8 +274,40 @@ class _LoginPageState extends State<LoginPage> {
                                     onPressed: () => setState(() => _obscure = !_obscure),
                                   ),
                                 ),
-                                validator: (v) => v == null || v.isEmpty ? "Required" : null,
+                                validator: (v) {
+                                  if (v == null || v.isEmpty) return "Required";
+                                  if (v.length < 6) return "Min 6 chars";
+                                  return null;
+                                },
                               ),
+                              if (!isLogin) ...[
+                                const SizedBox(height: 16),
+                                // Confirm Password
+                                TextFormField(
+                                  controller: _confirmPassController,
+                                  obscureText: _obscureConfirm,
+                                  decoration: InputDecoration(
+                                    hintText: "Confirm Password",
+                                    contentPadding: const EdgeInsets.symmetric(vertical: 18, horizontal: 22),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(28),
+                                      borderSide: BorderSide.none,
+                                    ),
+                                    filled: true,
+                                    fillColor: const Color(0xFFF5FBFC),
+                                    suffixIcon: IconButton(
+                                      icon: Icon(_obscureConfirm ? Icons.visibility : Icons.visibility_off, color: const Color(0xFF57C4DE)),
+                                      onPressed: () => setState(() => _obscureConfirm = !_obscureConfirm),
+                                    ),
+                                  ),
+                                  validator: (v) {
+                                    if (!isLogin && v != _passController.text) {
+                                      return "Passwords do not match";
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ],
                               const SizedBox(height: 20),
                               SizedBox(
                                 width: double.infinity,
