@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'screens/dashboard_page.dart';
 
 void main() {
   runApp(NepalShopApp());
@@ -36,6 +37,22 @@ class Product {
   });
 }
 
+class SaleRecord {
+  final String productName;
+  final DateTime time;
+  final int quantity;
+  final double totalAmount;
+  final String type; // 'buy' or 'sell'
+
+  SaleRecord({
+    required this.productName,
+    required this.time,
+    required this.quantity,
+    required this.totalAmount,
+    required this.type,
+  });
+}
+
 class ShopHomePage extends StatefulWidget {
   @override
   _ShopHomePageState createState() => _ShopHomePageState();
@@ -58,7 +75,6 @@ class _ShopHomePageState extends State<ShopHomePage> with TickerProviderStateMix
     Product(name: 'Bluetooth Speaker', category: 'Electronics', price: 4500, unit: 'piece'),
     Product(name: 'Mobile Cover', category: 'Electronics', price: 350, unit: 'piece'),
     Product(name: 'Memory Card', category: 'Electronics', price: 1200, unit: 'piece'),
-    
     // Food Items
     Product(name: 'Basmati Rice', category: 'Food', price: 180, unit: 'kg'),
     Product(name: 'Dal (Lentils)', category: 'Food', price: 150, unit: 'kg'),
@@ -70,7 +86,6 @@ class _ShopHomePageState extends State<ShopHomePage> with TickerProviderStateMix
     Product(name: 'Mustard Oil', category: 'Food', price: 320, unit: 'liter'),
     Product(name: 'Sel Roti Mix', category: 'Food', price: 125, unit: 'packet'),
     Product(name: 'Gundruk', category: 'Food', price: 95, unit: 'packet'),
-    
     // Clothing
     Product(name: 'Dhaka Topi', category: 'Clothing', price: 850, unit: 'piece'),
     Product(name: 'Kurta Suruwal', category: 'Clothing', price: 2500, unit: 'set'),
@@ -83,6 +98,7 @@ class _ShopHomePageState extends State<ShopHomePage> with TickerProviderStateMix
   ];
 
   final List<String> _categories = ['All', 'Electronics', 'Food', 'Clothing'];
+  final List<SaleRecord> _sales = [];
 
   @override
   void initState() {
@@ -117,6 +133,15 @@ class _ShopHomePageState extends State<ShopHomePage> with TickerProviderStateMix
     setState(() {
       if (product.quantity < 20) {
         product.quantity++;
+        _sales.add(
+          SaleRecord(
+            productName: product.name,
+            time: DateTime.now(),
+            quantity: 1,
+            totalAmount: product.price,
+            type: 'buy',
+          ),
+        );
       }
     });
     _showSnackBar('${product.name} purchased! Quantity: ${product.quantity}', Colors.green);
@@ -126,6 +151,15 @@ class _ShopHomePageState extends State<ShopHomePage> with TickerProviderStateMix
     setState(() {
       if (product.quantity > 0) {
         product.quantity--;
+        _sales.add(
+          SaleRecord(
+            productName: product.name,
+            time: DateTime.now(),
+            quantity: 1,
+            totalAmount: product.price,
+            type: 'sell',
+          ),
+        );
       }
     });
     _showSnackBar('${product.name} sold! Quantity: ${product.quantity}', Colors.orange);
@@ -180,6 +214,18 @@ class _ShopHomePageState extends State<ShopHomePage> with TickerProviderStateMix
         backgroundColor: Color(0xFF1E88E5),
         elevation: 8,
         actions: [
+          IconButton(
+            icon: Icon(Icons.dashboard, color: Colors.white),
+            tooltip: "Dashboard",
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DashboardPage(products: _products, sales: _sales),
+                ),
+              );
+            },
+          ),
           IconButton(
             icon: Icon(Icons.analytics, color: Colors.white),
             onPressed: () => _showAnalytics(),
