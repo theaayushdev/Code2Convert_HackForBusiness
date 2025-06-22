@@ -23,7 +23,7 @@ class NepalShopApp extends StatelessWidget {
 
 class Product {
   final String name;
-  final String category;
+  final String category; // This will match filter section
   final double price;
   final String unit;
   int quantity;
@@ -60,44 +60,60 @@ class ShopHomePage extends StatefulWidget {
 
 class _ShopHomePageState extends State<ShopHomePage> with TickerProviderStateMixin {
   final TextEditingController _searchController = TextEditingController();
-  String _selectedCategory = 'सबै'; // Nepali for "All"
+  String _selectedCategory = 'सबै';
   List<Product> _filteredProducts = [];
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
 
-  final List<Product> _products = [
-    // Electronics
-    Product(name: 'Samsung Galaxy फोन', category: 'इलेक्ट्रोनिक्स', price: 85000, unit: 'वटा'),
-    Product(name: 'Sony हेडफोन', category: 'इलेक्ट्रोनिक्स', price: 12000, unit: 'वटा'),
-    Product(name: 'ल्यापटप चार्जर', category: 'इलेक्ट्रोनिक्स', price: 3500, unit: 'वटा'),
-    Product(name: 'पावर बैंक', category: 'इलेक्ट्रोनिक्स', price: 2800, unit: 'वटा'),
-    Product(name: 'LED टिभी', category: 'इलेक्ट्रोनिक्स', price: 65000, unit: 'वटा'),
-    Product(name: 'ब्लुटुथ स्पिकर', category: 'इलेक्ट्रोनिक्स', price: 4500, unit: 'वटा'),
-    Product(name: 'मोबाइल कभर', category: 'इलेक्ट्रोनिक्स', price: 350, unit: 'वटा'),
-    Product(name: 'मेमोरी कार्ड', category: 'इलेक्ट्रोनिक्स', price: 1200, unit: 'वटा'),
-    // Food Items
-    Product(name: 'बास्मती चामल', category: 'खाद्य', price: 180, unit: 'केजी'),
-    Product(name: 'दाल', category: 'खाद्य', price: 150, unit: 'केजी'),
-    Product(name: 'कुखुरा', category: 'खाद्य', price: 650, unit: 'केजी'),
-    Product(name: 'अचार', category: 'खाद्य', price: 280, unit: 'बोतल'),
-    Product(name: 'नेपाली चिया', category: 'खाद्य', price: 45, unit: 'प्याकेट'),
-    Product(name: 'घ्यु', category: 'खाद्य', price: 1200, unit: 'लिटर'),
-    Product(name: 'मह', category: 'खाद्य', price: 850, unit: 'बोतल'),
-    Product(name: 'तोरीको तेल', category: 'खाद्य', price: 320, unit: 'लिटर'),
-    Product(name: 'सेल रोटी मिक्स', category: 'खाद्य', price: 125, unit: 'प्याकेट'),
-    Product(name: 'गुन्द्रुक', category: 'खाद्य', price: 95, unit: 'प्याकेट'),
-    // Clothing
-    Product(name: 'ढाका टोपी', category: 'लुगा', price: 850, unit: 'वटा'),
-    Product(name: 'कुर्ता सुरुवाल', category: 'लुगा', price: 2500, unit: 'सेट'),
-    Product(name: 'साडी', category: 'लुगा', price: 3200, unit: 'वटा'),
-    Product(name: 'पश्मिना साल', category: 'लुगा', price: 1800, unit: 'वटा'),
-    Product(name: 'टी-शर्ट', category: 'लुगा', price: 750, unit: 'वटा'),
-    Product(name: 'जिन्स', category: 'लुगा', price: 1950, unit: 'वटा'),
-    Product(name: 'पारम्परिक ब्लाउज', category: 'लुगा', price: 1200, unit: 'वटा'),
-    Product(name: 'चोलो', category: 'लुगा', price: 950, unit: 'वटा'),
+  final List<String> _categories = [
+    'सबै',
+    'खानेकुरा',
+    'नास्ता / स्न्याक्स',
+    'पेय पदार्थ',
+    'मसला',
+    'घरेलु सामान',
   ];
 
-  final List<String> _categories = ['सबै', 'इलेक्ट्रोनिक्स', 'खाद्य', 'लुगा'];
+  final List<Product> _products = [
+    // खानेकुरा
+    Product(name: 'बास्मती चामल', category: 'खानेकुरा', price: 180, unit: 'केजी'),
+    Product(name: 'दाल', category: 'खानेकुरा', price: 150, unit: 'केजी'),
+    Product(name: 'तोरीको तेल', category: 'खानेकुरा', price: 320, unit: 'लिटर'),
+    Product(name: 'नुन', category: 'खानेकुरा', price: 20, unit: 'प्याकेट'),
+    Product(name: 'चिनी', category: 'खानेकुरा', price: 100, unit: 'केजी'),
+    Product(name: 'पीठो', category: 'खानेकुरा', price: 85, unit: 'केजी'),
+    Product(name: 'गुन्द्रुक', category: 'खानेकुरा', price: 95, unit: 'प्याकेट'),
+
+    // मसला
+    Product(name: 'जीरा', category: 'मसला', price: 200, unit: 'केजी'),
+    Product(name: 'गरम मसला', category: 'मसला', price: 120, unit: 'प्याकेट'),
+    Product(name: 'हल्दी पाउडर', category: 'मसला', price: 90, unit: 'प्याकेट'),
+    Product(name: 'धनियाँ पाउडर', category: 'मसला', price: 80, unit: 'प्याकेट'),
+
+    // नास्ता / स्न्याक्स
+    Product(name: 'चाउचाउ', category: 'नास्ता / स्न्याक्स', price: 25, unit: 'प्याकेट'),
+    Product(name: 'कुरकुरे', category: 'नास्ता / स्न्याक्स', price: 20, unit: 'प्याकेट'),
+    Product(name: 'बिस्कुट', category: 'नास्ता / स्न्याक्स', price: 30, unit: 'प्याकेट'),
+    Product(name: 'पापड', category: 'नास्ता / स्न्याक्स', price: 15, unit: 'पिस'),
+    Product(name: 'सेल रोटी मिक्स', category: 'नास्ता / स्न्याक्स', price: 125, unit: 'प्याकेट'),
+
+    // पेय पदार्थ
+    Product(name: 'कोकाकोला', category: 'पेय पदार्थ', price: 60, unit: 'बोतल'),
+    Product(name: 'फ्रूटी', category: 'पेय पदार्थ', price: 25, unit: 'प्याकेट'),
+    Product(name: 'रियल ज्यूस', category: 'पेय पदार्थ', price: 90, unit: 'प्याकेट'),
+    Product(name: 'मिनरल वाटर', category: 'पेय पदार्थ', price: 20, unit: 'बोतल'),
+    Product(name: 'नेपाली चिया', category: 'पेय पदार्थ', price: 45, unit: 'प्याकेट'),
+    Product(name: 'इन्स्टेन्ट कफी', category: 'पेय पदार्थ', price: 120, unit: 'प्याकेट'),
+
+    // घरेलु सामान
+    Product(name: 'मह', category: 'घरेलु सामान', price: 850, unit: 'बोतल'),
+    Product(name: 'अचार', category: 'घरेलु सामान', price: 280, unit: 'बोतल'),
+    Product(name: 'घ्यु', category: 'घरेलु सामान', price: 1200, unit: 'लिटर'),
+    Product(name: 'सावुन', category: 'घरेलु सामान', price: 25, unit: 'पिस'),
+    Product(name: 'टुथपेस्ट', category: 'घरेलु सामान', price: 90, unit: 'वटा'),
+    Product(name: 'ब्रस', category: 'घरेलु सामान', price: 40, unit: 'वटा'),
+  ];
+
   final List<SaleRecord> _sales = [];
 
   @override
@@ -178,11 +194,15 @@ class _ShopHomePageState extends State<ShopHomePage> with TickerProviderStateMix
 
   Color _getCategoryColor(String category) {
     switch (category) {
-      case 'इलेक्ट्रोनिक्स':
+      case 'खानेकुरा':
+        return Colors.teal;
+      case 'नास्ता / स्न्याक्स':
+        return Colors.deepOrange;
+      case 'पेय पदार्थ':
         return Colors.blue;
-      case 'खाद्य':
+      case 'मसला':
         return Colors.green;
-      case 'लुगा':
+      case 'घरेलु सामान':
         return Colors.purple;
       default:
         return Colors.grey;
@@ -191,12 +211,16 @@ class _ShopHomePageState extends State<ShopHomePage> with TickerProviderStateMix
 
   IconData _getCategoryIcon(String category) {
     switch (category) {
-      case 'इलेक्ट्रोनिक्स':
-        return Icons.phone_android;
-      case 'खाद्य':
-        return Icons.restaurant;
-      case 'लुगा':
-        return Icons.checkroom;
+      case 'खानेकुरा':
+        return Icons.rice_bowl;
+      case 'नास्ता / स्न्याक्स':
+        return Icons.fastfood;
+      case 'पेय पदार्थ':
+        return Icons.local_drink;
+      case 'मसला':
+        return Icons.spa;
+      case 'घरेलु सामान':
+        return Icons.home;
       default:
         return Icons.inventory_2;
     }
@@ -528,7 +552,7 @@ class _ShopHomePageState extends State<ShopHomePage> with TickerProviderStateMix
     final nameController = TextEditingController();
     final priceController = TextEditingController();
     final unitController = TextEditingController();
-    String selectedCategory = 'इलेक्ट्रोनिक्स';
+    String selectedCategory = _categories[1]; // Default to first real category
 
     showDialog(
       context: context,
@@ -546,9 +570,10 @@ class _ShopHomePageState extends State<ShopHomePage> with TickerProviderStateMix
               DropdownButtonFormField<String>(
                 value: selectedCategory,
                 decoration: InputDecoration(labelText: 'कोटि'),
-                items: ['इलेक्ट्रोनिक्स', 'खाद्य', 'लुगा']
-                    .map((cat) => DropdownMenuItem(value: cat, child: Text(cat)))
-                    .toList(),
+                items: _categories
+                  .where((cat) => cat != 'सबै')
+                  .map((cat) => DropdownMenuItem(value: cat, child: Text(cat)))
+                  .toList(),
                 onChanged: (value) => setState(() => selectedCategory = value!),
               ),
               SizedBox(height: 12),
