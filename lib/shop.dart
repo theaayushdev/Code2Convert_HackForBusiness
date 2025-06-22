@@ -1,0 +1,598 @@
+import 'package:flutter/material.dart';
+import 'screens/dashboard_page.dart';
+
+void main() {
+  runApp(NepalShopApp());
+}
+
+class NepalShopApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'नेपाल पसल प्रबन्धक',
+      theme: ThemeData(
+        primarySwatch: Colors.green,
+        primaryColor: Color(0xFF1E88E5),
+        fontFamily: 'Roboto',
+      ),
+      home: ShopHomePage(),
+      debugShowCheckedModeBanner: false,
+    );
+  }
+}
+
+class Product {
+  final String name;
+  final String category;
+  final double price;
+  final String unit;
+  int quantity;
+
+  Product({
+    required this.name,
+    required this.category,
+    required this.price,
+    required this.unit,
+    this.quantity = 0,
+  });
+}
+
+class SaleRecord {
+  final String productName;
+  final DateTime time;
+  final int quantity;
+  final double totalAmount;
+  final String type; // 'buy' or 'sell'
+
+  SaleRecord({
+    required this.productName,
+    required this.time,
+    required this.quantity,
+    required this.totalAmount,
+    required this.type,
+  });
+}
+
+class ShopHomePage extends StatefulWidget {
+  @override
+  _ShopHomePageState createState() => _ShopHomePageState();
+}
+
+class _ShopHomePageState extends State<ShopHomePage> with TickerProviderStateMixin {
+  final TextEditingController _searchController = TextEditingController();
+  String _selectedCategory = 'सबै'; // Nepali for "All"
+  List<Product> _filteredProducts = [];
+  late AnimationController _animationController;
+  late Animation<double> _fadeAnimation;
+
+  final List<Product> _products = [
+    // Electronics
+    Product(name: 'Samsung Galaxy फोन', category: 'इलेक्ट्रोनिक्स', price: 85000, unit: 'वटा'),
+    Product(name: 'Sony हेडफोन', category: 'इलेक्ट्रोनिक्स', price: 12000, unit: 'वटा'),
+    Product(name: 'ल्यापटप चार्जर', category: 'इलेक्ट्रोनिक्स', price: 3500, unit: 'वटा'),
+    Product(name: 'पावर बैंक', category: 'इलेक्ट्रोनिक्स', price: 2800, unit: 'वटा'),
+    Product(name: 'LED टिभी', category: 'इलेक्ट्रोनिक्स', price: 65000, unit: 'वटा'),
+    Product(name: 'ब्लुटुथ स्पिकर', category: 'इलेक्ट्रोनिक्स', price: 4500, unit: 'वटा'),
+    Product(name: 'मोबाइल कभर', category: 'इलेक्ट्रोनिक्स', price: 350, unit: 'वटा'),
+    Product(name: 'मेमोरी कार्ड', category: 'इलेक्ट्रोनिक्स', price: 1200, unit: 'वटा'),
+    // Food Items
+    Product(name: 'बास्मती चामल', category: 'खाद्य', price: 180, unit: 'केजी'),
+    Product(name: 'दाल', category: 'खाद्य', price: 150, unit: 'केजी'),
+    Product(name: 'कुखुरा', category: 'खाद्य', price: 650, unit: 'केजी'),
+    Product(name: 'अचार', category: 'खाद्य', price: 280, unit: 'बोतल'),
+    Product(name: 'नेपाली चिया', category: 'खाद्य', price: 45, unit: 'प्याकेट'),
+    Product(name: 'घ्यु', category: 'खाद्य', price: 1200, unit: 'लिटर'),
+    Product(name: 'मह', category: 'खाद्य', price: 850, unit: 'बोतल'),
+    Product(name: 'तोरीको तेल', category: 'खाद्य', price: 320, unit: 'लिटर'),
+    Product(name: 'सेल रोटी मिक्स', category: 'खाद्य', price: 125, unit: 'प्याकेट'),
+    Product(name: 'गुन्द्रुक', category: 'खाद्य', price: 95, unit: 'प्याकेट'),
+    // Clothing
+    Product(name: 'ढाका टोपी', category: 'लुगा', price: 850, unit: 'वटा'),
+    Product(name: 'कुर्ता सुरुवाल', category: 'लुगा', price: 2500, unit: 'सेट'),
+    Product(name: 'साडी', category: 'लुगा', price: 3200, unit: 'वटा'),
+    Product(name: 'पश्मिना साल', category: 'लुगा', price: 1800, unit: 'वटा'),
+    Product(name: 'टी-शर्ट', category: 'लुगा', price: 750, unit: 'वटा'),
+    Product(name: 'जिन्स', category: 'लुगा', price: 1950, unit: 'वटा'),
+    Product(name: 'पारम्परिक ब्लाउज', category: 'लुगा', price: 1200, unit: 'वटा'),
+    Product(name: 'चोलो', category: 'लुगा', price: 950, unit: 'वटा'),
+  ];
+
+  final List<String> _categories = ['सबै', 'इलेक्ट्रोनिक्स', 'खाद्य', 'लुगा'];
+  final List<SaleRecord> _sales = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _filteredProducts = _products;
+    _animationController = AnimationController(
+      duration: Duration(milliseconds: 300),
+      vsync: this,
+    );
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(_animationController);
+    _animationController.forward();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _filterProducts() {
+    setState(() {
+      _filteredProducts = _products.where((product) {
+        final matchesSearch = product.name.toLowerCase().contains(_searchController.text.toLowerCase());
+        final matchesCategory = _selectedCategory == 'सबै' || product.category == _selectedCategory;
+        return matchesSearch && matchesCategory;
+      }).toList();
+    });
+  }
+
+  void _buyProduct(Product product) {
+    setState(() {
+      if (product.quantity < 20) {
+        product.quantity++;
+        _sales.add(
+          SaleRecord(
+            productName: product.name,
+            time: DateTime.now(),
+            quantity: 1,
+            totalAmount: product.price,
+            type: 'buy',
+          ),
+        );
+      }
+    });
+    _showSnackBar('${product.name} किनियो! जम्मा: ${product.quantity}', Colors.green);
+  }
+
+  void _sellProduct(Product product) {
+    setState(() {
+      if (product.quantity > 0) {
+        product.quantity--;
+        _sales.add(
+          SaleRecord(
+            productName: product.name,
+            time: DateTime.now(),
+            quantity: 1,
+            totalAmount: product.price,
+            type: 'sell',
+          ),
+        );
+      }
+    });
+    _showSnackBar('${product.name} बेचियो! जम्मा: ${product.quantity}', Colors.orange);
+  }
+
+  void _showSnackBar(String message, Color color) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: color,
+        duration: Duration(seconds: 2),
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
+
+  Color _getCategoryColor(String category) {
+    switch (category) {
+      case 'इलेक्ट्रोनिक्स':
+        return Colors.blue;
+      case 'खाद्य':
+        return Colors.green;
+      case 'लुगा':
+        return Colors.purple;
+      default:
+        return Colors.grey;
+    }
+  }
+
+  IconData _getCategoryIcon(String category) {
+    switch (category) {
+      case 'इलेक्ट्रोनिक्स':
+        return Icons.phone_android;
+      case 'खाद्य':
+        return Icons.restaurant;
+      case 'लुगा':
+        return Icons.checkroom;
+      default:
+        return Icons.inventory_2;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Color(0xFFF5F5F5),
+      appBar: AppBar(
+        title: Text(
+          'नेपाल पसल प्रबन्धक',
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+        ),
+        backgroundColor: Color(0xFF1E88E5),
+        elevation: 8,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.dashboard, color: Colors.white),
+            tooltip: "ड्यासबोर्ड",
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DashboardPage(products: _products, sales: _sales),
+                ),
+              );
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.analytics, color: Colors.white),
+            tooltip: "विश्लेषण",
+            onPressed: () => _showAnalytics(),
+          ),
+        ],
+      ),
+      body: FadeTransition(
+        opacity: _fadeAnimation,
+        child: Column(
+          children: [
+            // Search and Filter Section
+            Container(
+              padding: EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.2),
+                    spreadRadius: 2,
+                    blurRadius: 8,
+                    offset: Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Column(
+                children: [
+                  TextField(
+                    controller: _searchController,
+                    decoration: InputDecoration(
+                      hintText: 'उत्पादन खोज्नुहोस्...',
+                      prefixIcon: Icon(Icons.search, color: Color(0xFF1E88E5)),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(25),
+                        borderSide: BorderSide.none,
+                      ),
+                      filled: true,
+                      fillColor: Color(0xFFF0F0F0),
+                      contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                    ),
+                    onChanged: (value) => _filterProducts(),
+                  ),
+                  SizedBox(height: 12),
+                  Container(
+                    height: 45,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: _categories.length,
+                      itemBuilder: (context, index) {
+                        final category = _categories[index];
+                        final isSelected = _selectedCategory == category;
+                        return Padding(
+                          padding: EdgeInsets.only(right: 8),
+                          child: FilterChip(
+                            label: Text(
+                              category,
+                              style: TextStyle(
+                                color: isSelected ? Colors.white : Color(0xFF1E88E5),
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            selected: isSelected,
+                            onSelected: (selected) {
+                              setState(() {
+                                _selectedCategory = category;
+                                _filterProducts();
+                              });
+                            },
+                            backgroundColor: Colors.white,
+                            selectedColor: Color(0xFF1E88E5),
+                            elevation: isSelected ? 4 : 2,
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            // Products List
+            Expanded(
+              child: ListView.builder(
+                padding: EdgeInsets.all(16),
+                itemCount: _filteredProducts.length,
+                itemBuilder: (context, index) {
+                  final product = _filteredProducts[index];
+                  return Container(
+                    margin: EdgeInsets.only(bottom: 12),
+                    child: Card(
+                      elevation: 6,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          gradient: LinearGradient(
+                            colors: [Colors.white, Color(0xFFFAFAFA)],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.all(16),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      color: _getCategoryColor(product.category).withOpacity(0.1),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Icon(
+                                      _getCategoryIcon(product.category),
+                                      color: _getCategoryColor(product.category),
+                                      size: 24,
+                                    ),
+                                  ),
+                                  SizedBox(width: 12),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          product.name,
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                            color: Color(0xFF2C2C2C),
+                                          ),
+                                        ),
+                                        Text(
+                                          product.category,
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: _getCategoryColor(product.category),
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Container(
+                                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                    decoration: BoxDecoration(
+                                      color: product.quantity > 0 ? Colors.green.withOpacity(0.1) : Colors.red.withOpacity(0.1),
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: Text(
+                                      'स्टक: ${product.quantity}',
+                                      style: TextStyle(
+                                        color: product.quantity > 0 ? Colors.green[700] : Colors.red[700],
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 12),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'रू ${product.price.toStringAsFixed(0)}',
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                          color: Color(0xFF1E88E5),
+                                        ),
+                                      ),
+                                      Text(
+                                        'प्रति ${product.unit}',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.grey[600],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      ElevatedButton(
+                                        onPressed: () => _buyProduct(product),
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.green,
+                                          foregroundColor: Colors.white,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(20),
+                                          ),
+                                          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                          elevation: 3,
+                                        ),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Icon(Icons.add_shopping_cart, size: 16),
+                                            SizedBox(width: 4),
+                                            Text('किन्नुहोस्', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(width: 8),
+                                      ElevatedButton(
+                                        onPressed: product.quantity > 0 ? () => _sellProduct(product) : null,
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.orange,
+                                          foregroundColor: Colors.white,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(20),
+                                          ),
+                                          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                          elevation: 3,
+                                        ),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Icon(Icons.sell, size: 16),
+                                            SizedBox(width: 4),
+                                            Text('बेच्नुहोस्', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () => _showAddProductDialog(),
+        backgroundColor: Color(0xFF1E88E5),
+        icon: Icon(Icons.add, color: Colors.white),
+        label: Text('नयाँ उत्पादन थप्नुहोस्', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        elevation: 8,
+      ),
+    );
+  }
+
+  void _showAnalytics() {
+    final totalProducts = _products.length;
+    final totalStock = _products.fold(0, (sum, product) => sum + product.quantity);
+    final totalValue = _products.fold(0.0, (sum, product) => sum + (product.quantity * product.price));
+    final lowStockItems = _products.where((product) => product.quantity <= 2).length;
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('पसल विश्लेषण', style: TextStyle(fontWeight: FontWeight.bold)),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildAnalyticsRow('कुल उत्पादन:', totalProducts.toString()),
+            _buildAnalyticsRow('कुल स्टक:', totalStock.toString()),
+            _buildAnalyticsRow('स्टक मूल्य:', 'रू ${totalValue.toStringAsFixed(0)}'),
+            _buildAnalyticsRow('कम स्टक चेतावनी:', lowStockItems.toString()),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('बन्द गर्नुहोस्'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAnalyticsRow(String label, String value) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(label),
+          Text(value, style: TextStyle(fontWeight: FontWeight.bold)),
+        ],
+      ),
+    );
+  }
+
+  void _showAddProductDialog() {
+    final nameController = TextEditingController();
+    final priceController = TextEditingController();
+    final unitController = TextEditingController();
+    String selectedCategory = 'इलेक्ट्रोनिक्स';
+
+    showDialog(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) => AlertDialog(
+          title: Text('नयाँ उत्पादन थप्नुहोस्'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: nameController,
+                decoration: InputDecoration(labelText: 'उत्पादन नाम'),
+              ),
+              SizedBox(height: 12),
+              DropdownButtonFormField<String>(
+                value: selectedCategory,
+                decoration: InputDecoration(labelText: 'कोटि'),
+                items: ['इलेक्ट्रोनिक्स', 'खाद्य', 'लुगा']
+                    .map((cat) => DropdownMenuItem(value: cat, child: Text(cat)))
+                    .toList(),
+                onChanged: (value) => setState(() => selectedCategory = value!),
+              ),
+              SizedBox(height: 12),
+              TextField(
+                controller: priceController,
+                decoration: InputDecoration(labelText: 'मूल्य (रू)'),
+                keyboardType: TextInputType.number,
+              ),
+              SizedBox(height: 12),
+              TextField(
+                controller: unitController,
+                decoration: InputDecoration(labelText: 'इकाई (केजी, वटा, लिटर)'),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('रद्द गर्नुहोस्'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                if (nameController.text.isNotEmpty &&
+                    priceController.text.isNotEmpty &&
+                    unitController.text.isNotEmpty) {
+                  final newProduct = Product(
+                    name: nameController.text,
+                    category: selectedCategory,
+                    price: double.parse(priceController.text),
+                    unit: unitController.text,
+                  );
+                  setState(() {
+                    _products.add(newProduct);
+                    _filterProducts();
+                  });
+                  Navigator.pop(context);
+                  _showSnackBar('उत्पादन सफलतापूर्वक थपियो!', Colors.green);
+                }
+              },
+              child: Text('थप्नुहोस्'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
