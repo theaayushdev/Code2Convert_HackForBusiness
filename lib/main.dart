@@ -9,7 +9,7 @@ class NepalShopApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Nepal Shop Manager',
+      title: 'नेपाल पसल प्रबन्धक',
       theme: ThemeData(
         primarySwatch: Colors.green,
         primaryColor: Color(0xFF1E88E5),
@@ -60,44 +60,44 @@ class ShopHomePage extends StatefulWidget {
 
 class _ShopHomePageState extends State<ShopHomePage> with TickerProviderStateMixin {
   final TextEditingController _searchController = TextEditingController();
-  String _selectedCategory = 'All';
+  String _selectedCategory = 'सबै'; // Nepali for "All"
   List<Product> _filteredProducts = [];
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
 
   final List<Product> _products = [
     // Electronics
-    Product(name: 'Samsung Galaxy Phone', category: 'Electronics', price: 85000, unit: 'piece'),
-    Product(name: 'Sony Headphones', category: 'Electronics', price: 12000, unit: 'piece'),
-    Product(name: 'Laptop Charger', category: 'Electronics', price: 3500, unit: 'piece'),
-    Product(name: 'Power Bank', category: 'Electronics', price: 2800, unit: 'piece'),
-    Product(name: 'LED TV', category: 'Electronics', price: 65000, unit: 'piece'),
-    Product(name: 'Bluetooth Speaker', category: 'Electronics', price: 4500, unit: 'piece'),
-    Product(name: 'Mobile Cover', category: 'Electronics', price: 350, unit: 'piece'),
-    Product(name: 'Memory Card', category: 'Electronics', price: 1200, unit: 'piece'),
+    Product(name: 'Samsung Galaxy फोन', category: 'इलेक्ट्रोनिक्स', price: 85000, unit: 'वटा'),
+    Product(name: 'Sony हेडफोन', category: 'इलेक्ट्रोनिक्स', price: 12000, unit: 'वटा'),
+    Product(name: 'ल्यापटप चार्जर', category: 'इलेक्ट्रोनिक्स', price: 3500, unit: 'वटा'),
+    Product(name: 'पावर बैंक', category: 'इलेक्ट्रोनिक्स', price: 2800, unit: 'वटा'),
+    Product(name: 'LED टिभी', category: 'इलेक्ट्रोनिक्स', price: 65000, unit: 'वटा'),
+    Product(name: 'ब्लुटुथ स्पिकर', category: 'इलेक्ट्रोनिक्स', price: 4500, unit: 'वटा'),
+    Product(name: 'मोबाइल कभर', category: 'इलेक्ट्रोनिक्स', price: 350, unit: 'वटा'),
+    Product(name: 'मेमोरी कार्ड', category: 'इलेक्ट्रोनिक्स', price: 1200, unit: 'वटा'),
     // Food Items
-    Product(name: 'Basmati Rice', category: 'Food', price: 180, unit: 'kg'),
-    Product(name: 'Dal (Lentils)', category: 'Food', price: 150, unit: 'kg'),
-    Product(name: 'Chicken', category: 'Food', price: 650, unit: 'kg'),
-    Product(name: 'Achar (Pickle)', category: 'Food', price: 280, unit: 'bottle'),
-    Product(name: 'Nepali Tea', category: 'Food', price: 45, unit: 'packet'),
-    Product(name: 'Ghee', category: 'Food', price: 1200, unit: 'liter'),
-    Product(name: 'Honey', category: 'Food', price: 850, unit: 'bottle'),
-    Product(name: 'Mustard Oil', category: 'Food', price: 320, unit: 'liter'),
-    Product(name: 'Sel Roti Mix', category: 'Food', price: 125, unit: 'packet'),
-    Product(name: 'Gundruk', category: 'Food', price: 95, unit: 'packet'),
+    Product(name: 'बास्मती चामल', category: 'खाद्य', price: 180, unit: 'केजी'),
+    Product(name: 'दाल', category: 'खाद्य', price: 150, unit: 'केजी'),
+    Product(name: 'कुखुरा', category: 'खाद्य', price: 650, unit: 'केजी'),
+    Product(name: 'अचार', category: 'खाद्य', price: 280, unit: 'बोतल'),
+    Product(name: 'नेपाली चिया', category: 'खाद्य', price: 45, unit: 'प्याकेट'),
+    Product(name: 'घ्यु', category: 'खाद्य', price: 1200, unit: 'लिटर'),
+    Product(name: 'मह', category: 'खाद्य', price: 850, unit: 'बोतल'),
+    Product(name: 'तोरीको तेल', category: 'खाद्य', price: 320, unit: 'लिटर'),
+    Product(name: 'सेल रोटी मिक्स', category: 'खाद्य', price: 125, unit: 'प्याकेट'),
+    Product(name: 'गुन्द्रुक', category: 'खाद्य', price: 95, unit: 'प्याकेट'),
     // Clothing
-    Product(name: 'Dhaka Topi', category: 'Clothing', price: 850, unit: 'piece'),
-    Product(name: 'Kurta Suruwal', category: 'Clothing', price: 2500, unit: 'set'),
-    Product(name: 'Saree', category: 'Clothing', price: 3200, unit: 'piece'),
-    Product(name: 'Pashmina Shawl', category: 'Clothing', price: 1800, unit: 'piece'),
-    Product(name: 'T-Shirt', category: 'Clothing', price: 750, unit: 'piece'),
-    Product(name: 'Jeans', category: 'Clothing', price: 1950, unit: 'piece'),
-    Product(name: 'Traditional Blouse', category: 'Clothing', price: 1200, unit: 'piece'),
-    Product(name: 'Cholo (Vest)', category: 'Clothing', price: 950, unit: 'piece'),
+    Product(name: 'ढाका टोपी', category: 'लुगा', price: 850, unit: 'वटा'),
+    Product(name: 'कुर्ता सुरुवाल', category: 'लुगा', price: 2500, unit: 'सेट'),
+    Product(name: 'साडी', category: 'लुगा', price: 3200, unit: 'वटा'),
+    Product(name: 'पश्मिना साल', category: 'लुगा', price: 1800, unit: 'वटा'),
+    Product(name: 'टी-शर्ट', category: 'लुगा', price: 750, unit: 'वटा'),
+    Product(name: 'जिन्स', category: 'लुगा', price: 1950, unit: 'वटा'),
+    Product(name: 'पारम्परिक ब्लाउज', category: 'लुगा', price: 1200, unit: 'वटा'),
+    Product(name: 'चोलो', category: 'लुगा', price: 950, unit: 'वटा'),
   ];
 
-  final List<String> _categories = ['All', 'Electronics', 'Food', 'Clothing'];
+  final List<String> _categories = ['सबै', 'इलेक्ट्रोनिक्स', 'खाद्य', 'लुगा'];
   final List<SaleRecord> _sales = [];
 
   @override
@@ -123,7 +123,7 @@ class _ShopHomePageState extends State<ShopHomePage> with TickerProviderStateMix
     setState(() {
       _filteredProducts = _products.where((product) {
         final matchesSearch = product.name.toLowerCase().contains(_searchController.text.toLowerCase());
-        final matchesCategory = _selectedCategory == 'All' || product.category == _selectedCategory;
+        final matchesCategory = _selectedCategory == 'सबै' || product.category == _selectedCategory;
         return matchesSearch && matchesCategory;
       }).toList();
     });
@@ -144,7 +144,7 @@ class _ShopHomePageState extends State<ShopHomePage> with TickerProviderStateMix
         );
       }
     });
-    _showSnackBar('${product.name} purchased! Quantity: ${product.quantity}', Colors.green);
+    _showSnackBar('${product.name} किनियो! जम्मा: ${product.quantity}', Colors.green);
   }
 
   void _sellProduct(Product product) {
@@ -162,7 +162,7 @@ class _ShopHomePageState extends State<ShopHomePage> with TickerProviderStateMix
         );
       }
     });
-    _showSnackBar('${product.name} sold! Quantity: ${product.quantity}', Colors.orange);
+    _showSnackBar('${product.name} बेचियो! जम्मा: ${product.quantity}', Colors.orange);
   }
 
   void _showSnackBar(String message, Color color) {
@@ -178,11 +178,11 @@ class _ShopHomePageState extends State<ShopHomePage> with TickerProviderStateMix
 
   Color _getCategoryColor(String category) {
     switch (category) {
-      case 'Electronics':
+      case 'इलेक्ट्रोनिक्स':
         return Colors.blue;
-      case 'Food':
+      case 'खाद्य':
         return Colors.green;
-      case 'Clothing':
+      case 'लुगा':
         return Colors.purple;
       default:
         return Colors.grey;
@@ -191,11 +191,11 @@ class _ShopHomePageState extends State<ShopHomePage> with TickerProviderStateMix
 
   IconData _getCategoryIcon(String category) {
     switch (category) {
-      case 'Electronics':
+      case 'इलेक्ट्रोनिक्स':
         return Icons.phone_android;
-      case 'Food':
+      case 'खाद्य':
         return Icons.restaurant;
-      case 'Clothing':
+      case 'लुगा':
         return Icons.checkroom;
       default:
         return Icons.inventory_2;
@@ -208,7 +208,7 @@ class _ShopHomePageState extends State<ShopHomePage> with TickerProviderStateMix
       backgroundColor: Color(0xFFF5F5F5),
       appBar: AppBar(
         title: Text(
-          'Nepal Shop Manager',
+          'नेपाल पसल प्रबन्धक',
           style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
         ),
         backgroundColor: Color(0xFF1E88E5),
@@ -216,7 +216,7 @@ class _ShopHomePageState extends State<ShopHomePage> with TickerProviderStateMix
         actions: [
           IconButton(
             icon: Icon(Icons.dashboard, color: Colors.white),
-            tooltip: "Dashboard",
+            tooltip: "ड्यासबोर्ड",
             onPressed: () {
               Navigator.push(
                 context,
@@ -228,6 +228,7 @@ class _ShopHomePageState extends State<ShopHomePage> with TickerProviderStateMix
           ),
           IconButton(
             icon: Icon(Icons.analytics, color: Colors.white),
+            tooltip: "विश्लेषण",
             onPressed: () => _showAnalytics(),
           ),
         ],
@@ -255,7 +256,7 @@ class _ShopHomePageState extends State<ShopHomePage> with TickerProviderStateMix
                   TextField(
                     controller: _searchController,
                     decoration: InputDecoration(
-                      hintText: 'Search products...',
+                      hintText: 'उत्पादन खोज्नुहोस्...',
                       prefixIcon: Icon(Icons.search, color: Color(0xFF1E88E5)),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(25),
@@ -377,7 +378,7 @@ class _ShopHomePageState extends State<ShopHomePage> with TickerProviderStateMix
                                       borderRadius: BorderRadius.circular(20),
                                     ),
                                     child: Text(
-                                      'Stock: ${product.quantity}',
+                                      'स्टक: ${product.quantity}',
                                       style: TextStyle(
                                         color: product.quantity > 0 ? Colors.green[700] : Colors.red[700],
                                         fontWeight: FontWeight.bold,
@@ -403,7 +404,7 @@ class _ShopHomePageState extends State<ShopHomePage> with TickerProviderStateMix
                                         ),
                                       ),
                                       Text(
-                                        'per ${product.unit}',
+                                        'प्रति ${product.unit}',
                                         style: TextStyle(
                                           fontSize: 12,
                                           color: Colors.grey[600],
@@ -429,7 +430,7 @@ class _ShopHomePageState extends State<ShopHomePage> with TickerProviderStateMix
                                           children: [
                                             Icon(Icons.add_shopping_cart, size: 16),
                                             SizedBox(width: 4),
-                                            Text('Buy', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                                            Text('किन्नुहोस्', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
                                           ],
                                         ),
                                       ),
@@ -450,7 +451,7 @@ class _ShopHomePageState extends State<ShopHomePage> with TickerProviderStateMix
                                           children: [
                                             Icon(Icons.sell, size: 16),
                                             SizedBox(width: 4),
-                                            Text('Sell', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                                            Text('बेच्नुहोस्', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
                                           ],
                                         ),
                                       ),
@@ -474,7 +475,7 @@ class _ShopHomePageState extends State<ShopHomePage> with TickerProviderStateMix
         onPressed: () => _showAddProductDialog(),
         backgroundColor: Color(0xFF1E88E5),
         icon: Icon(Icons.add, color: Colors.white),
-        label: Text('Add Product', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        label: Text('नयाँ उत्पादन थप्नुहोस्', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
         elevation: 8,
       ),
     );
@@ -489,21 +490,21 @@ class _ShopHomePageState extends State<ShopHomePage> with TickerProviderStateMix
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Shop Analytics', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: Text('पसल विश्लेषण', style: TextStyle(fontWeight: FontWeight.bold)),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildAnalyticsRow('Total Products:', totalProducts.toString()),
-            _buildAnalyticsRow('Total Stock:', totalStock.toString()),
-            _buildAnalyticsRow('Stock Value:', 'रू ${totalValue.toStringAsFixed(0)}'),
-            _buildAnalyticsRow('Low Stock Alert:', lowStockItems.toString()),
+            _buildAnalyticsRow('कुल उत्पादन:', totalProducts.toString()),
+            _buildAnalyticsRow('कुल स्टक:', totalStock.toString()),
+            _buildAnalyticsRow('स्टक मूल्य:', 'रू ${totalValue.toStringAsFixed(0)}'),
+            _buildAnalyticsRow('कम स्टक चेतावनी:', lowStockItems.toString()),
           ],
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Close'),
+            child: Text('बन्द गर्नुहोस्'),
           ),
         ],
       ),
@@ -527,25 +528,25 @@ class _ShopHomePageState extends State<ShopHomePage> with TickerProviderStateMix
     final nameController = TextEditingController();
     final priceController = TextEditingController();
     final unitController = TextEditingController();
-    String selectedCategory = 'Electronics';
+    String selectedCategory = 'इलेक्ट्रोनिक्स';
 
     showDialog(
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, setState) => AlertDialog(
-          title: Text('Add New Product'),
+          title: Text('नयाँ उत्पादन थप्नुहोस्'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
                 controller: nameController,
-                decoration: InputDecoration(labelText: 'Product Name'),
+                decoration: InputDecoration(labelText: 'उत्पादन नाम'),
               ),
               SizedBox(height: 12),
               DropdownButtonFormField<String>(
                 value: selectedCategory,
-                decoration: InputDecoration(labelText: 'Category'),
-                items: ['Electronics', 'Food', 'Clothing']
+                decoration: InputDecoration(labelText: 'कोटि'),
+                items: ['इलेक्ट्रोनिक्स', 'खाद्य', 'लुगा']
                     .map((cat) => DropdownMenuItem(value: cat, child: Text(cat)))
                     .toList(),
                 onChanged: (value) => setState(() => selectedCategory = value!),
@@ -553,20 +554,20 @@ class _ShopHomePageState extends State<ShopHomePage> with TickerProviderStateMix
               SizedBox(height: 12),
               TextField(
                 controller: priceController,
-                decoration: InputDecoration(labelText: 'Price (रू)'),
+                decoration: InputDecoration(labelText: 'मूल्य (रू)'),
                 keyboardType: TextInputType.number,
               ),
               SizedBox(height: 12),
               TextField(
                 controller: unitController,
-                decoration: InputDecoration(labelText: 'Unit (kg, piece, liter)'),
+                decoration: InputDecoration(labelText: 'इकाई (केजी, वटा, लिटर)'),
               ),
             ],
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text('Cancel'),
+              child: Text('रद्द गर्नुहोस्'),
             ),
             ElevatedButton(
               onPressed: () {
@@ -584,10 +585,10 @@ class _ShopHomePageState extends State<ShopHomePage> with TickerProviderStateMix
                     _filterProducts();
                   });
                   Navigator.pop(context);
-                  _showSnackBar('Product added successfully!', Colors.green);
+                  _showSnackBar('उत्पादन सफलतापूर्वक थपियो!', Colors.green);
                 }
               },
-              child: Text('Add'),
+              child: Text('थप्नुहोस्'),
             ),
           ],
         ),
