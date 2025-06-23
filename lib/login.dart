@@ -130,12 +130,12 @@ class _LoginPageState extends State<LoginPage> {
                           style: TextStyle(
                           fontSize: 38,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white, // This will be masked by the shader
+                          color: Color(0xFF2C3E50), // Slightly dark blue-gray
                           letterSpacing: 1.5,
                           shadows: [
                             Shadow(
                             blurRadius: 8,
-                            color: Colors.black26,
+                            color: Colors.black12, // Lighter shadow
                             offset: Offset(2, 2),
                             ),
                           ],

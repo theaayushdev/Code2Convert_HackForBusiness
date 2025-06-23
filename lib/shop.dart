@@ -426,49 +426,57 @@ class _ShopHomePageState extends State<ShopHomePage> with TickerProviderStateMix
             Text('प्रोफाइल', style: TextStyle(fontWeight: FontWeight.bold)),
           ],
         ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-            CircleAvatar(
-              radius: 36,
-              backgroundColor: Color(0xFF1E88E5),
-              child: Icon(Icons.person, size: 48, color: Colors.white),
-            ),
-            SizedBox(height: 14),
-            Text('Ram Bahadur', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-            SizedBox(height: 6),
-            Text('rambahadur@gmail.com', style: TextStyle(color: Colors.grey[700], fontSize: 14)),
-            SizedBox(height: 12),
-            Divider(),
-            ListTile(
-              leading: Icon(Icons.store, color: Color(0xFF43A047)),
-              title: Text('पसलको नाम:'),
-              subtitle: Text('सबित्रा किराना तथा चिया पसल'),
-            ),
-            ListTile(
-              leading: Icon(Icons.phone, color: Color(0xFF43A047)),
-              title: Text('फोन:'),
-              subtitle: Text('९८४५६७८९०१'),
-            ),
-            ListTile(
-              leading: Icon(Icons.location_on, color: Color(0xFF43A047)),
-              title: Text('ठेगाना:'),
-              subtitle: Text('काठमाडौं, नेपाल'),
-            ),
-            ListTile(
-              leading: Icon(Icons.category, color: Color(0xFF43A047)),
-              title: Text('पसलको प्रकार:'),
-              subtitle: Text('किराना'),
-            ),
-            ListTile(
-              leading: Icon(Icons.sync, color: Color(0xFF43A047)),
-              title: Text('अन्तिम Sync:'),
-              subtitle: Text(
-              '${DateTime.now().toLocal().toString().split('.')[0]}',
-              style: TextStyle(fontSize: 13),
+              CircleAvatar(
+                radius: 36,
+                backgroundColor: Color(0xFF1E88E5),
+                child: Icon(Icons.person, size: 48, color: Colors.white),
               ),
-            ),
-          ],
+              SizedBox(height: 14),
+              Text('Ram Bahadur', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+              SizedBox(height: 6),
+              Text('rambahadur@gmail.com', style: TextStyle(color: Colors.grey[700], fontSize: 14)),
+              SizedBox(height: 12),
+              Divider(),
+              ListTile(
+                leading: Icon(Icons.store, color: Color(0xFF43A047)),
+                title: Text('पसलको नाम:'),
+                subtitle: Text('सबित्रा किराना तथा चिया पसल'),
+              ),
+              ListTile(
+                leading: Icon(Icons.phone, color: Color(0xFF43A047)),
+                title: Text('फोन:'),
+                subtitle: Text('९८४५६७८९०१'),
+              ),
+              ListTile(
+                leading: Icon(Icons.location_on, color: Color(0xFF43A047)),
+                title: Text('ठेगाना:'),
+                subtitle: Text('काठमाडौं, नेपाल'),
+              ),
+              ListTile(
+                leading: Icon(Icons.category, color: Color(0xFF43A047)),
+                title: Text('पसलको प्रकार:'),
+                subtitle: Text('किराना'),
+              ),
+              ListTile(
+                leading: Icon(Icons.confirmation_number, color: Color(0xFF43A047)),
+                title: Text('पसल ID:'),
+                subtitle: Text('SHOP0125'),
+              ),
+              ListTile(
+                leading: Icon(Icons.sync, color: Color(0xFF43A047)),
+                title: Text('अन्तिम Sync:'),
+                subtitle: Text(
+                  '2025-06-23 8:15:00', // <-- Static date/time
+                  style: TextStyle(fontSize: 13),
+                ),
+              ),
+            ],
+          ),
+        
         ),
         actions: [
           TextButton(
@@ -492,25 +500,32 @@ class _ShopHomePageState extends State<ShopHomePage> with TickerProviderStateMix
             Text('हाम्रो बारेमा', style: TextStyle(fontWeight: FontWeight.bold)),
           ],
         ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              'पसले एक सरल, स्मार्ट र नेपाली भाषामा आधारित पसल व्यवस्थापन एप हो। '
-              'यस एपको उद्देश्य साना तथा मझौला व्यवसायीहरूको दैनिक व्यापार सजिलो बनाउनु हो।\n\n'
-              'यो एप डेमो प्रयोजनका लागि बनाइएको हो।',
-              style: TextStyle(fontSize: 15),
-            ),
-            SizedBox(height: 18),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.copyright, size: 16, color: Colors.grey),
-                SizedBox(width: 3),
-                Text('2025 | Team Pasale', style: TextStyle(color: Colors.grey[700], fontSize: 13)),
-              ],
-            ),
-          ],
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                  'पसले एक सरल, स्मार्ट र नेपाली भाषामा आधारित पसल व्यवस्थापन एप हो। '
+                  'यस एपको उद्देश्य साना तथा मझौला व्यवसायीहरूको दैनिक व्यापार सजिलो बनाउनु हो।\n\n'
+                  'यो एप डेमो प्रयोजनका लागि बनाइएको हो।\n\n'
+                  'पसले एपले स्टक व्यवस्थापन, बिक्री/किनमेल र आवाज खोज जस्ता सुविधाहरू उपलब्ध गराउँछ। '
+                  'यसले तपाईंको पसलको सम्पूर्ण विवरण सजिलै ट्र्याक गर्न र विश्लेषण गर्न सहयोग गर्छ।\n\n'
+                  'हामी नेपाली व्यवसायीहरूको डिजिटल यात्रामा साथ दिन प्रतिबद्ध छौं। '
+                  'तपाईंको सुझाव र प्रतिक्रिया सधैं स्वागत छ!',
+                style: TextStyle(fontSize: 18),
+              ),
+              SizedBox(height: 18),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.copyright, size: 16, color: Colors.grey),
+                  SizedBox(width: 3),
+                  Text('2025 | Team Pasale', style: TextStyle(color: Colors.grey[700], fontSize: 13)),
+                ],
+              ),
+            ],
+          ),
+        
         ),
         actions: [
           TextButton(
