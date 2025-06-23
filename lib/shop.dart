@@ -88,49 +88,81 @@ class _ShopHomePageState extends State<ShopHomePage> with TickerProviderStateMix
   bool _isListening = false;
   bool _isDialogOpen = false; // <-- Added dialog open flag
 
+  // Bottom Navbar index
+  int _selectedNavbarIndex = 0;
+
   @override
   void initState() {
     super.initState();
     // List of all products with random quantity for demo
     _products = [
-      // खानेकुरा
-      Product(name: 'बास्मती चामल', category: 'खानेकुरा', price: 180, unit: 'केजी', quantity: _rand()),
-      Product(name: 'दाल', category: 'खानेकुरा', price: 150, unit: 'केजी', quantity: _rand()),
-      Product(name: 'तोरीको तेल', category: 'खानेकुरा', price: 320, unit: 'लिटर', quantity: _rand()),
-      Product(name: 'नुन', category: 'खानेकुरा', price: 20, unit: 'प्याकेट', quantity: _rand()),
-      Product(name: 'चिनी', category: 'खानेकुरा', price: 100, unit: 'केजी', quantity: _rand()),
-      Product(name: 'पीठो', category: 'खानेकुरा', price: 85, unit: 'केजी', quantity: _rand()),
-      Product(name: 'गुन्द्रुक', category: 'खानेकुरा', price: 95, unit: 'प्याकेट', quantity: _rand()),
+  // खानेकुरा
+  Product(name: 'बास्मती चामल', category: 'खानेकुरा', price: 180, unit: 'केजी', quantity: _rand()),
+  Product(name: 'दाल', category: 'खानेकुरा', price: 150, unit: 'केजी', quantity: _rand()),
+  Product(name: 'तोरीको तेल', category: 'खानेकुरा', price: 320, unit: 'लिटर', quantity: _rand()),
+  Product(name: 'नुन', category: 'खानेकुरा', price: 20, unit: 'प्याकेट', quantity: _rand()),
+  Product(name: 'चिनी', category: 'खानेकुरा', price: 100, unit: 'केजी', quantity: _rand()),
+  Product(name: 'पीठो', category: 'खानेकुरा', price: 85, unit: 'केजी', quantity: _rand()),
+  Product(name: 'गुन्द्रुक', category: 'खानेकुरा', price: 95, unit: 'प्याकेट', quantity: _rand()),
+  Product(name: 'गहुँ', category: 'खानेकुरा', price: 90, unit: 'केजी', quantity: _rand()),
+  Product(name: 'मकै', category: 'खानेकुरा', price: 80, unit: 'केजी', quantity: _rand()),
+  Product(name: 'कोदो', category: 'खानेकुरा', price: 100, unit: 'केजी', quantity: _rand()),
 
-      // मसला
-      Product(name: 'जीरा', category: 'मसला', price: 200, unit: 'केजी', quantity: _rand()),
-      Product(name: 'गरम मसला', category: 'मसला', price: 120, unit: 'प्याकेट', quantity: _rand()),
-      Product(name: 'हल्दी पाउडर', category: 'मसला', price: 90, unit: 'प्याकेट', quantity: _rand()),
-      Product(name: 'धनियाँ पाउडर', category: 'मसला', price: 80, unit: 'प्याकेट', quantity: _rand()),
+  // मसला
+  Product(name: 'जीरा', category: 'मसला', price: 200, unit: 'केजी', quantity: _rand()),
+  Product(name: 'गरम मसला', category: 'मसला', price: 120, unit: 'प्याकेट', quantity: _rand()),
+  Product(name: 'हल्दी पाउडर', category: 'मसला', price: 90, unit: 'प्याकेट', quantity: _rand()),
+  Product(name: 'धनियाँ पाउडर', category: 'मसला', price: 80, unit: 'प्याकेट', quantity: _rand()),
+  Product(name: 'अदुवा पाउडर', category: 'मसला', price: 100, unit: 'प्याकेट', quantity: _rand()),
+  Product(name: 'लसुन पाउडर', category: 'मसला', price: 110, unit: 'प्याकेट', quantity: _rand()),
 
-      // नास्ता / स्न्याक्स
-      Product(name: 'चाउचाउ', category: 'नास्ता / स्न्याक्स', price: 25, unit: 'प्याकेट', quantity: _rand()),
-      Product(name: 'कुरकुरे', category: 'नास्ता / स्न्याक्स', price: 20, unit: 'प्याकेट', quantity: _rand()),
-      Product(name: 'बिस्कुट', category: 'नास्ता / स्न्याक्स', price: 30, unit: 'प्याकेट', quantity: _rand()),
-      Product(name: 'पापड', category: 'नास्ता / स्न्याक्स', price: 15, unit: 'पिस', quantity: _rand()),
-      Product(name: 'सेल रोटी मिक्स', category: 'नास्ता / स्न्याक्स', price: 125, unit: 'प्याकेट', quantity: _rand()),
+  // नास्ता / स्न्याक्स
+  Product(name: 'चाउचाउ', category: 'नास्ता / स्न्याक्स', price: 25, unit: 'प्याकेट', quantity: _rand()),
+  Product(name: 'कुरकुरे', category: 'नास्ता / स्न्याक्स', price: 20, unit: 'प्याकेट', quantity: _rand()),
+  Product(name: 'बिस्कुट', category: 'नास्ता / स्न्याक्स', price: 30, unit: 'प्याकेट', quantity: _rand()),
+  Product(name: 'पापड', category: 'नास्ता / स्न्याक्स', price: 15, unit: 'पिस', quantity: _rand()),
+  Product(name: 'सेल रोटी मिक्स', category: 'नास्ता / स्न्याक्स', price: 125, unit: 'प्याकेट', quantity: _rand()),
+  Product(name: 'भुजा', category: 'नास्ता / स्न्याक्स', price: 40, unit: 'प्याकेट', quantity: _rand()),
+  Product(name: 'मकै भुटेको', category: 'नास्ता / स्न्याक्स', price: 30, unit: 'प्याकेट', quantity: _rand()),
 
-      // पेय पदार्थ
-      Product(name: 'कोकाकोला', category: 'पेय पदार्थ', price: 60, unit: 'बोतल', quantity: _rand()),
-      Product(name: 'फ्रूटी', category: 'पेय पदार्थ', price: 25, unit: 'प्याकेट', quantity: _rand()),
-      Product(name: 'रियल ज्यूस', category: 'पेय पदार्थ', price: 90, unit: 'प्याकेट', quantity: _rand()),
-      Product(name: 'मिनरल वाटर', category: 'पेय पदार्थ', price: 20, unit: 'बोतल', quantity: _rand()),
-      Product(name: 'नेपाली चिया', category: 'पेय पदार्थ', price: 45, unit: 'प्याकेट', quantity: _rand()),
-      Product(name: 'इन्स्टेन्ट कफी', category: 'पेय पदार्थ', price: 120, unit: 'प्याकेट', quantity: _rand()),
+  // पेय पदार्थ
+  Product(name: 'कोकाकोला', category: 'पेय पदार्थ', price: 60, unit: 'बोतल', quantity: _rand()),
+  Product(name: 'फ्रूटी', category: 'पेय पदार्थ', price: 25, unit: 'प्याकेट', quantity: _rand()),
+  Product(name: 'रियल ज्यूस', category: 'पेय पदार्थ', price: 90, unit: 'प्याकेट', quantity: _rand()),
+  Product(name: 'मिनरल वाटर', category: 'पेय पदार्थ', price: 20, unit: 'बोतल', quantity: _rand()),
+  Product(name: 'नेपाली चिया', category: 'पेय पदार्थ', price: 45, unit: 'प्याकेट', quantity: _rand()),
+  Product(name: 'इन्स्टेन्ट कफी', category: 'पेय पदार्थ', price: 120, unit: 'प्याकेट', quantity: _rand()),
 
-      // घरेलु सामान
-      Product(name: 'मह', category: 'घरेलु सामान', price: 850, unit: 'बोतल', quantity: _rand()),
-      Product(name: 'अचार', category: 'घरेलु सामान', price: 280, unit: 'बोतल', quantity: _rand()),
-      Product(name: 'घ्यु', category: 'घरेलु सामान', price: 1200, unit: 'लिटर', quantity: _rand()),
-      Product(name: 'सावुन', category: 'घरेलु सामान', price: 25, unit: 'पिस', quantity: _rand()),
-      Product(name: 'टुथपेस्ट', category: 'घरेलु सामान', price: 90, unit: 'वटा', quantity: _rand()),
-      Product(name: 'ब्रस', category: 'घरेलु सामान', price: 40, unit: 'वटा', quantity: _rand()),
-    ];
+  // घरेलु सामान
+  Product(name: 'मह', category: 'घरेलु सामान', price: 850, unit: 'बोतल', quantity: _rand()),
+  Product(name: 'अचार', category: 'घरेलु सामान', price: 280, unit: 'बोतल', quantity: _rand()),
+  Product(name: 'घ्यु', category: 'घरेलु सामान', price: 1200, unit: 'लिटर', quantity: _rand()),
+  Product(name: 'सावुन', category: 'घरेलु सामान', price: 25, unit: 'पिस', quantity: _rand()),
+  Product(name: 'टुथपेस्ट', category: 'घरेलु सामान', price: 90, unit: 'वटा', quantity: _rand()),
+  Product(name: 'ब्रस', category: 'घरेलु सामान', price: 40, unit: 'वटा', quantity: _rand()),
+  Product(name: 'डिटर्जेन्ट पाउडर', category: 'घरेलु सामान', price: 90, unit: 'प्याकेट', quantity: _rand()),
+  Product(name: 'डिटर्जेन्ट बार', category: 'घरेलु सामान', price: 25, unit: 'पिस', quantity: _rand()),
+  Product(name: 'फिनाइल', category: 'घरेलु सामान', price: 100, unit: 'बोतल', quantity: _rand()),
+  Product(name: 'झाडु', category: 'घरेलु सामान', price: 80, unit: 'वटा', quantity: _rand()),
+
+  // खाना पकाउने सामग्री
+  Product(name: 'ग्यास सिलिन्डर', category: 'खाना पकाउने सामग्री', price: 1800, unit: 'वटा', quantity: _rand()),
+  Product(name: 'कुकर', category: 'खाना पकाउने सामग्री', price: 1200, unit: 'वटा', quantity: _rand()),
+  Product(name: 'भाँडा माझ्ने साबुन', category: 'खाना पकाउने सामग्री', price: 25, unit: 'पिस', quantity: _rand()),
+  Product(name: 'भाँडा माझ्ने लिक्विड', category: 'खाना पकाउने सामग्री', price: 120, unit: 'बोतल', quantity: _rand()),
+
+  // बच्चाको सामग्री
+  Product(name: 'पाम्पर्स', category: 'बच्चाको सामग्री', price: 300, unit: 'प्याकेट', quantity: _rand()),
+  Product(name: 'बेबी लोसन', category: 'बच्चाको सामग्री', price: 250, unit: 'बोतल', quantity: _rand()),
+  Product(name: 'बेबी पाउडर', category: 'बच्चाको सामग्री', price: 180, unit: 'बोतल', quantity: _rand()),
+  Product(name: 'बेबी साबुन', category: 'बच्चाको सामग्री', price: 60, unit: 'पिस', quantity: _rand()),
+
+  // अन्य
+  Product(name: 'मोमबत्ती', category: 'अन्य', price: 20, unit: 'प्याकेट', quantity: _rand()),
+  Product(name: 'म्याचिस', category: 'अन्य', price: 5, unit: 'प्याकेट', quantity: _rand()),
+  Product(name: 'प्लास्टिक झोला', category: 'अन्य', price: 10, unit: 'पिस', quantity: _rand()),
+  Product(name: 'अल्मुनियम फोइल', category: 'अन्य', price: 90, unit: 'रोल', quantity: _rand()),
+];
 
     _filteredProducts = _products;
     _animationController = AnimationController(
@@ -232,7 +264,7 @@ class _ShopHomePageState extends State<ShopHomePage> with TickerProviderStateMix
   IconData _getCategoryIcon(String category) {
     switch (category) {
       case 'खानेकुरा':
-        return Icons.rice_bowl;
+        return Icons.fastfood;
       case 'नास्ता / स्न्याक्स':
         return Icons.fastfood;
       case 'पेय पदार्थ':
@@ -339,6 +371,157 @@ class _ShopHomePageState extends State<ShopHomePage> with TickerProviderStateMix
     }
   }
   // --- END MIC FUNCTION WITH POPUP ---
+
+  // --- Cool Bottom Navbar ---
+  Widget _buildBottomNavbar() {
+    return ClipRRect(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
+      child: BottomNavigationBar(
+        backgroundColor: Colors.white,
+        selectedItemColor: Color(0xFF1E88E5),
+        unselectedItemColor: Colors.grey[500],
+        currentIndex: _selectedNavbarIndex,
+        elevation: 14,
+        type: BottomNavigationBarType.fixed,
+        showUnselectedLabels: true,
+        selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_rounded, size: 28),
+            label: "गृहपृष्ठ",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_rounded, size: 28),
+            label: "प्रोफाइल",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.info_rounded, size: 28),
+            label: "हाम्रो बारेमा",
+          ),
+        ],
+        onTap: (index) {
+          setState(() {
+            _selectedNavbarIndex = index;
+          });
+          if (index == 1) {
+            _showProfileDialog();
+          } else if (index == 2) {
+            _showAboutUsDialog();
+          }
+          // index==0 is home, do nothing (just stay here)
+        },
+      ),
+    );
+  }
+
+  void _showProfileDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+        title: Row(
+          children: [
+            Icon(Icons.person_rounded, color: Color(0xFF1E88E5)),
+            SizedBox(width: 10),
+            Text('प्रोफाइल', style: TextStyle(fontWeight: FontWeight.bold)),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+            children: [
+            CircleAvatar(
+              radius: 36,
+              backgroundColor: Color(0xFF1E88E5),
+              child: Icon(Icons.person, size: 48, color: Colors.white),
+            ),
+            SizedBox(height: 14),
+            Text('Ram Bahadur', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+            SizedBox(height: 6),
+            Text('rambahadur@gmail.com', style: TextStyle(color: Colors.grey[700], fontSize: 14)),
+            SizedBox(height: 12),
+            Divider(),
+            ListTile(
+              leading: Icon(Icons.store, color: Color(0xFF43A047)),
+              title: Text('पसलको नाम:'),
+              subtitle: Text('सबित्रा किराना तथा चिया पसल'),
+            ),
+            ListTile(
+              leading: Icon(Icons.phone, color: Color(0xFF43A047)),
+              title: Text('फोन:'),
+              subtitle: Text('९८४५६७८९०१'),
+            ),
+            ListTile(
+              leading: Icon(Icons.location_on, color: Color(0xFF43A047)),
+              title: Text('ठेगाना:'),
+              subtitle: Text('काठमाडौं, नेपाल'),
+            ),
+            ListTile(
+              leading: Icon(Icons.category, color: Color(0xFF43A047)),
+              title: Text('पसलको प्रकार:'),
+              subtitle: Text('किराना'),
+            ),
+            ListTile(
+              leading: Icon(Icons.sync, color: Color(0xFF43A047)),
+              title: Text('अन्तिम Sync:'),
+              subtitle: Text(
+              '${DateTime.now().toLocal().toString().split('.')[0]}',
+              style: TextStyle(fontSize: 13),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('ठिक छ'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showAboutUsDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+        title: Row(
+          children: [
+            Icon(Icons.info_rounded, color: Color(0xFF1E88E5)),
+            SizedBox(width: 10),
+            Text('हाम्रो बारेमा', style: TextStyle(fontWeight: FontWeight.bold)),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'पसले एक सरल, स्मार्ट र नेपाली भाषामा आधारित पसल व्यवस्थापन एप हो। '
+              'यस एपको उद्देश्य साना तथा मझौला व्यवसायीहरूको दैनिक व्यापार सजिलो बनाउनु हो।\n\n'
+              'यो एप डेमो प्रयोजनका लागि बनाइएको हो।',
+              style: TextStyle(fontSize: 15),
+            ),
+            SizedBox(height: 18),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.copyright, size: 16, color: Colors.grey),
+                SizedBox(width: 3),
+                Text('2025 | Team Pasale', style: TextStyle(color: Colors.grey[700], fontSize: 13)),
+              ],
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('ठिक छ'),
+          ),
+        ],
+      ),
+    );
+  }
+  // --- End Cool Bottom Navbar ---
 
   @override
   Widget build(BuildContext context) {
@@ -642,6 +825,8 @@ class _ShopHomePageState extends State<ShopHomePage> with TickerProviderStateMix
         label: Text('नयाँ उत्पादन थप्नुहोस्', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
         elevation: 8,
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      bottomNavigationBar: _buildBottomNavbar(), // <-- Add cool bottom navbar here
     );
   }
 
