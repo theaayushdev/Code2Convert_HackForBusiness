@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
-import '../main.dart';
+import '../shop.dart';
 
 // CSV EXPORT FUNCTION
 Future<void> exportSalesToCsv(BuildContext context, List<SaleRecord> sales) async {
@@ -76,7 +76,7 @@ class DashboardPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Admin Dashboard', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+        title: Text('User Dashboard', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
         backgroundColor: Color(0xFF1E88E5),
         elevation: 8,
         actions: [
