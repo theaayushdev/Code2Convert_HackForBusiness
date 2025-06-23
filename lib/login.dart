@@ -115,29 +115,61 @@ class _LoginPageState extends State<LoginPage> {
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          Text(
-                            "Hello!",
-                            style: TextStyle(
-                              fontSize: 34,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ShaderMask(
+                        shaderCallback: (Rect bounds) {
+                          return const LinearGradient(
+                          colors: [Color(0xFFFFD700), Color(0xFF57C4DE)],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          ).createShader(bounds);
+                        },
+                        child: const Text(
+                          "नमस्ते!",
+                          style: TextStyle(
+                          fontSize: 38,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white, // This will be masked by the shader
+                          letterSpacing: 1.5,
+                          shadows: [
+                            Shadow(
+                            blurRadius: 8,
+                            color: Colors.black26,
+                            offset: Offset(2, 2),
                             ),
+                          ],
                           ),
-                          SizedBox(height: 6),
+                        ),
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                        children: const [
+                          Icon(Icons.storefront, color: Colors.white, size: 32),
+                          SizedBox(width: 8),
                           Text(
-                            "Welcome to पसले",
-                            style: TextStyle(
-                              fontSize: 26,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
+                          "पसलेमा स्वागत छ",
+                          style: TextStyle(
+                            fontSize: 28,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 1.2,
+                            shadows: [
+                            Shadow(
+                              blurRadius: 6,
+                              color: Colors.black26,
+                              offset: Offset(1, 2),
                             ),
+                            ],
+                          ),
                           ),
                         ],
+                        ),
+                      ],
                       ),
                     ),
-                  ),
+                    ),
+                  
                   const SizedBox(height: 52),
                   // White card with tabs and form
                   Container(
