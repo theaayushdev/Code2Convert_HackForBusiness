@@ -1,6 +1,6 @@
 # Pasale: Hyper-Local Retail Data Platform for Nepal
 
-Pasale is a simple, clean, and powerful Flutter application designed to digitize Nepal’s massive but largely offline retail sector. By making retail management easy and accessible for local shopkeepers, Pasale brings real-time inventory, sales tracking, and valuable analytics into the hands of 300,000+ stores across Nepal.
+Pasale is a simple, clean, and powerful Flutter application designed to digitize Nepal’s massive but largely offline retail sector. By making retail management easy and accessible for local shopkeepers, Pasale brings real-time inventory, sales tracking, and valuable analytics into the hands of 300,000+ stores across Nepal..
 
 ---
 
